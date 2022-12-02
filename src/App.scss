@@ -16,3 +16,55 @@ body {
   background-color: $background;
   min-width: fit-content;
 }
+
+h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  @include tablet {
+    font-size: 2rem;
+    line-height: 2.75rem;
+  }
+}
+
+h2 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: $primary-black;
+  font-weight: 400;
+  @include tablet {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+}
+
+h3 {
+  font-size: .8125rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  @include tablet {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+p,
+label,
+span,
+a {
+  font-size: .8125rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+  color: inherit;
+  @include tablet {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+ul,
+li {
+  list-style: none;
+}
