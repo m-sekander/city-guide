@@ -11,10 +11,10 @@ function Header() {
         </Link>
         <nav className="header__nav">
           <NavLink className="header__link" to="/home">
-            <h4>Home</h4>
+            <span>Home</span>
           </NavLink>
           <NavLink className="header__link" to="/compare">
-            <h4>Compare</h4>
+            <span>Compare</span>
           </NavLink>
         </nav>
       </div>

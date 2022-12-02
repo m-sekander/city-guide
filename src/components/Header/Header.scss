@@ -38,15 +38,18 @@
   }
 
   &__link {
-    padding: 0 0.5rem;
+    padding: 0.25rem 0.75rem;
     &:hover {
-      border-bottom: 1px solid $primary-black;
+      background-color: $primary-white;
+      color: $dark-red;
+      border-radius: 100px;
     }
   }
   
   .active {
-    color: $dark-red;
-    border-bottom: 1px solid $dark-red;
+    background-color: $dark-red;
+    color: $primary-white;
+    border-radius: 100px;
   }
 
   &__seperator {
