@@ -14,7 +14,22 @@ body {
   font-family: "Lato", sans-serif;
   color: $primary-blue;
   background-color: $background;
-  min-width: fit-content;
+  min-width: 320px;
+}
+
+.main {
+  margin: 0.5rem 0.875rem;
+  padding: 1.5rem 0;
+  height: calc(96.25vh - 69px);
+  min-height: fit-content;
+  max-height: 120rem;
+  background-color: $primary-white;
+  border: 1px solid rgba($primary-grey, 37.5%);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 h1 {
@@ -39,7 +54,7 @@ h2 {
 }
 
 h3 {
-  font-size: .8125rem;
+  font-size: 0.8125rem;
   line-height: 1.25rem;
   font-weight: 700;
   @include tablet {
@@ -52,7 +67,7 @@ p,
 label,
 span,
 a {
-  font-size: .8125rem;
+  font-size: 0.8125rem;
   line-height: 1.25rem;
   font-weight: 400;
   font-style: normal;
