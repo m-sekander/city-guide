@@ -7,6 +7,7 @@ import PlacesAutocomplete, {
 } from "react-places-autocomplete";
 import searchIcon from "../../assets/images/search.svg";
 import { useParams, useNavigate } from "react-router-dom";
+import { GoogleMap } from "@react-google-maps/api";
 
 function Home() {
   const [city, setCity] = useState("");
@@ -15,6 +16,16 @@ function Home() {
   const [cityId, setCityId] = useState(useParams().cityId);
   const searchOptions = { types: ["locality"] };
   const navigate = useNavigate();
+
+  const options = {
+    mapId: "93a3f4b17031a73e",
+    disableDefaultUI: true,
+    zoomControl: true,
+    scrollwheel: false,
+    clickableIcons: false,
+    minZoom: 8,
+    maxZoom: 14,
+  };
 
   useEffect(() => {
     window.scroll({
@@ -27,12 +38,7 @@ function Home() {
       geocodeByPlaceId(cityId)
         .then((result) => {
           // console.log("geocodeByPlaceId:", result[0]);
-          setFormattedCity(
-            result[0].formatted_address.slice(
-              0,
-              result[0].formatted_address.indexOf(",")
-            )
-          );
+          setFormattedCity(result[0].address_components[0].long_name);
           return getLatLng(result[0]);
         })
         .then((result) => {
@@ -72,6 +78,8 @@ function Home() {
       .catch((error) => {
         console.log("For devs:", error);
       });
+
+    setCity("");
   }
 
   return (
@@ -118,6 +126,23 @@ function Home() {
           )}
         </PlacesAutocomplete>
       </form>
+      {formattedCity && coordinates && (
+        <>
+          <div className="home__title">
+            <span className="home__preface">When in...</span>
+            <h1 className="home__name">{formattedCity}</h1>
+          </div>
+          <div className="home__map-container">
+            {/* component that generates a custom, interactive Google Map */}
+            <GoogleMap
+              zoom={9}
+              center={coordinates}
+              options={options}
+              mapContainerClassName="home__map"
+            ></GoogleMap>
+          </div>
+        </>
+      )}
     </>
   );
 }

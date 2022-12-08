@@ -16,16 +16,23 @@
 @font-face {
   font-family: "Lato";
   src: url("../../assets/fonts/Lato-Bold.woff2") format("woff2"),
-  url("../../assets/fonts/Lato-Bold.woff") format("woff"),
-  url("../../assets/fonts/Lato-Bold.woff") format("truetype");
+    url("../../assets/fonts/Lato-Bold.woff") format("woff"),
+    url("../../assets/fonts/Lato-Bold.woff") format("truetype");
   font-weight: bold;
 }
 
 @font-face {
   font-family: "Lato";
   src: url("../../assets/fonts/Lato-BoldItalic.woff2") format("woff2"),
-  url("../../assets/fonts/Lato-BoldItalic.woff") format("woff"),
-  url("../../assets/fonts/Lato-BoldItalic.ttf") format("truetype");
+    url("../../assets/fonts/Lato-BoldItalic.woff") format("woff"),
+    url("../../assets/fonts/Lato-BoldItalic.ttf") format("truetype");
   font-weight: bold;
   font-style: italic;
+}
+
+@font-face {
+  font-family: "Parisienne";
+  src: url("../../assets/fonts/Parisienne-Regular.woff2") format("woff2"),
+    url("../../assets/fonts/Lato-Regular.woff") format("woff"),
+    url("../../assets/fonts/Parisienne-Regular.ttf") format("truetype");
 }
