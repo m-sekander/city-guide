@@ -25,9 +25,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/home/:cityId" element={<Home />} />
           <Route path="/compare" element={<h1>Compare</h1>} />
-          <Route path="*" element={<h1>Not Found</h1>} />
+          <Route path="/404" element={<h1>Not Found</h1>} />
+          <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
+        <span className="main__footnote">
+          A wanderlust project by Moin Sekander
+        </span>
       </main>
     </BrowserRouter>
   );
