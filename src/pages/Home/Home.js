@@ -50,7 +50,7 @@ function Home() {
           navigate(`/404`);
         });
     }
-  }, [cityId]);
+  }, [cityId, navigate]);
 
   function handleChange(city) {
     setCity(city);
@@ -80,6 +80,10 @@ function Home() {
       });
 
     setCity("");
+  }
+
+  if (cityId && !formattedCity) {
+    return <h1>Loading...</h1>;
   }
 
   return (
@@ -135,7 +139,7 @@ function Home() {
           <div className="home__map-container">
             {/* component that generates a custom, interactive Google Map */}
             <GoogleMap
-              zoom={9}
+              zoom={10}
               center={coordinates}
               options={options}
               mapContainerClassName="home__map"

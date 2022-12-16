@@ -19,8 +19,7 @@ body {
 
 .main {
   padding: 1rem 0.5rem 1.75rem;
-  min-height: fit-content;
-  height: calc(100vh - 69px);
+  min-height: calc(100vh - 69px);
   max-height: 120rem;
   background-color: $primary-white;
   border: 1px solid rgba($primary-grey, 32.5%);
@@ -32,7 +31,7 @@ body {
   @include tablet {
     padding: 1.5rem 0.5rem;
     margin: 0.5rem 0.875rem;
-    height: calc(96.25vh - 69px);
+    min-height: calc(96.25vh - 69px);
     border-radius: 8px;
   }
 
