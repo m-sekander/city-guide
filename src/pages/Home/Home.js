@@ -8,14 +8,18 @@ import PlacesAutocomplete, {
 import searchIcon from "../../assets/images/search.svg";
 import { useParams, useNavigate } from "react-router-dom";
 import { GoogleMap } from "@react-google-maps/api";
+import Modal from "../../components/Modal/Modal";
+import axios from "axios";
 
 function Home() {
   const [city, setCity] = useState("");
   const [formattedCity, setFormattedCity] = useState("");
   const [coordinates, setCoordinates] = useState(null);
   const [cityId, setCityId] = useState(useParams().cityId);
+  const [modalActive, setModalActive] = useState(true);
   const searchOptions = { types: ["locality"] };
   const navigate = useNavigate();
+  const locationPermission = sessionStorage.getItem("locationPermission");
 
   const options = {
     mapId: "93a3f4b17031a73e",
@@ -82,8 +86,43 @@ function Home() {
     setCity("");
   }
 
+  function locationPermitted() {
+    axios
+      .post(
+        `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_GOOGLE_KEY}`,
+        {}
+      )
+      .then((result) => {
+        axios
+          .get(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${result.data.location.lat},${result.data.location.lng}&key=${process.env.REACT_APP_GOOGLE_KEY}`
+          )
+          .then((result) => {
+            for (const item of result.data.results) {
+              if (item.types.includes("locality")) {
+                window.location.assign(`/home/${item.place_id}`);
+                setModalActive(false);
+                sessionStorage.setItem("locationPermission", "allowed");
+              }
+            }
+          });
+      })
+      .catch((error) => {
+        console.log("For devs:", error);
+      });
+  }
+
+  function notPermitted() {
+    setModalActive(false);
+    sessionStorage.setItem("locationPermission", "denied");
+  }
+
   if (cityId && !formattedCity) {
-    return <h1>Loading...</h1>;
+    return;
+  }
+
+  if (locationPermission === "allowed" && !cityId) {
+    locationPermitted();
   }
 
   return (
@@ -139,13 +178,20 @@ function Home() {
           <div className="home__map-container">
             {/* component that generates a custom, interactive Google Map */}
             <GoogleMap
-              zoom={10}
+              zoom={11}
               center={coordinates}
               options={options}
               mapContainerClassName="home__map"
             ></GoogleMap>
           </div>
         </>
+      )}
+      {!cityId && modalActive && !locationPermission && (
+        <Modal
+          type="location"
+          function1={locationPermitted}
+          function2={notPermitted}
+        />
       )}
     </>
   );

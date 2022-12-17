@@ -2,7 +2,7 @@ import "./NotFound.scss";
 import canvasLogo from "../../assets/images/850656-200-sad-face.png";
 import backIcon from "../../assets/images/arrow-back-icon.svg";
 import homeIcon from "../../assets/images/home-icon.svg";
-import Button from "../Button/Button";
+import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 
 function NotFound() {
