@@ -6,11 +6,11 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import searchIcon from "../../assets/images/search.svg";
-import expansionIcon from "../../assets/images/chevron_right-24px.svg";
 import { useParams, useNavigate } from "react-router-dom";
 import { GoogleMap } from "@react-google-maps/api";
 import Modal from "../../components/Modal/Modal";
 import axios from "axios";
+import Forecast from "../../components/Forecast/Forecast";
 
 function Home() {
   const [city, setCity] = useState("");
@@ -20,7 +20,6 @@ function Home() {
   const [modalActive, setModalActive] = useState(true);
   const [weatherData, setWeatherData] = useState(null);
   const [expansion, setExpansion] = useState([false, false, false, false]);
-  const [buttonDisabled, setButtonDisabled] = useState(false);
   const searchOptions = { types: ["locality"] };
   const navigate = useNavigate();
   const locationPermission = sessionStorage.getItem("locationPermission");
@@ -186,70 +185,6 @@ function Home() {
     setWeatherData(weatherObj);
   }
 
-  function formatWindDir(dir) {
-    if (dir > 22.5 && dir < 67.5) {
-      return "NE";
-    } else if (dir >= 67.5 && dir <= 112.5) {
-      return "E";
-    } else if (dir > 112.5 && dir < 157.5) {
-      return "SE";
-    } else if (dir >= 157.5 && dir <= 202.5) {
-      return "S";
-    } else if (dir > 202.5 && dir < 247.5) {
-      return "SW";
-    } else if (dir >= 247.5 && dir <= 292.5) {
-      return "W";
-    } else if (dir > 292.5 && dir < 337.5) {
-      return "NW";
-    } else {
-      return "N";
-    }
-  }
-
-  function formatEpoch(timestamp, type, index) {
-    const date = new Date(timestamp * 1000);
-    const dayConversions = {
-      0: "Sunday",
-      1: "Monday",
-      2: "Tuesday",
-      3: "Wednesday",
-      4: "Thursday",
-      5: "Friday",
-      6: "Saturday",
-    };
-
-    if (type === "time") {
-      if (date.getHours() === 0) {
-        return `12:${date.getMinutes()}am`;
-      } else if (date.getHours() === 12) {
-        return `12:${date.getMinutes()}pm`;
-      } else if (date.getHours() < 12) {
-        return `${date.getHours()}:${date.getMinutes()}am`;
-      } else {
-        return `${date.getHours() - 12}:${date.getMinutes()}pm`;
-      }
-    } else if (type === "day") {
-      if (index === 0) {
-        return "Tomorrow";
-      } else {
-        return dayConversions[date.getDay()];
-      }
-    }
-  }
-
-  function expandForecast(index) {
-    setButtonDisabled(true);
-
-    setTimeout(() => {
-      setButtonDisabled(false);
-    }, 1500);
-
-    const updatedExpansion = [...expansion];
-    updatedExpansion[index] = !updatedExpansion[index];
-
-    return setExpansion(updatedExpansion);
-  }
-
   if (cityId && !formattedCity) {
     return;
   }
@@ -320,158 +255,11 @@ function Home() {
         </div>
       )}
       {weatherData && (
-        <>
-          <h2 className="home__forecast--title">Forecast</h2>
-          <div className="home__forecast">
-            <div className="home__forecast--current">
-              <h3 className="home__forecast--current-day">Today</h3>
-              <div className="home__forecast--current-temps">
-                <label className="home__forecast--label home__forecast--current-temp">
-                  Current:
-                  <span className="home__forecast--current-temp">
-                    {weatherData.weatherArr[0].temp}°C
-                  </span>
-                </label>
-                <div className="home__forecast--current-hi-lo">
-                  <label className="home__forecast--label">
-                    High:
-                    <span>{weatherData.weatherArr[0].tempMax}°C</span>
-                  </label>
-                  <label className="home__forecast--label">
-                    Low:
-                    <span>{weatherData.weatherArr[0].tempMin}°C</span>
-                  </label>
-                </div>
-              </div>
-              <div className="home__forecast--current-weather-container">
-                <div className="home__forecast--current-weather">
-                  <img
-                    className="home__forecast--current-icon"
-                    src={`http://openweathermap.org/img/w/${weatherData.weatherArr[0].icon}.png`}
-                    alt=""
-                  />
-                  <span className="home__forecast--current-description">
-                    {weatherData.weatherArr[0].desc}
-                  </span>
-                </div>
-              </div>
-              <div className="home__forecast--current-conditions">
-                <label className="home__forecast--label">
-                  Feel:
-                  <span>{weatherData.weatherArr[0].feel}°C</span>
-                </label>
-                <label className="home__forecast--label">
-                  Humidity:
-                  <span>{weatherData.weatherArr[0].humidity}%</span>
-                </label>
-                <label className="home__forecast--label home__forecast--label-pop">
-                  PoP:
-                  <span>
-                    {Math.round(weatherData.weatherArr[0].pop * 100)}%
-                  </span>
-                </label>
-                <label className="home__forecast--label">
-                  Wind:
-                  <span>
-                    {weatherData.weatherArr[0].windSpeed}
-                    {"m/s "}
-                    {formatWindDir(weatherData.weatherArr[0].windDir)}
-                  </span>
-                </label>
-                <label className="home__forecast--label">
-                  Sunrise:
-                  <span>{formatEpoch(weatherData.sunrise, "time")}</span>
-                </label>
-                <label className="home__forecast--label">
-                  Sunset:
-                  <span>{formatEpoch(weatherData.sunset, "time")}</span>
-                </label>
-              </div>
-            </div>
-            <div className="home__forecast--upcoming-container">
-              {weatherData.weatherArr.slice(1).map((item, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`home__forecast--upcoming  ${
-                      expansion[i]
-                        ? "home__forecast--upcoming-expand"
-                        : "home__forecast--upcoming-compress"
-                    }`}
-                  >
-                    <div className="home__forecast--upcoming-main">
-                      <h3 className="home__forecast--upcoming-day">
-                        {formatEpoch(item.dt, "day", i)}
-                      </h3>
-                      <div className="home__forecast--upcoming-weather">
-                        <img
-                          className="home__forecast--upcoming-icon"
-                          src={`http://openweathermap.org/img/w/${item.icon}.png`}
-                          alt=""
-                        />
-                        <span className="home__forecast--upcoming-description">
-                          {item.desc}
-                        </span>
-                      </div>
-                      <div className="home__forecast--upcoming-hi-lo">
-                        <label className="home__forecast--upcoming-label">
-                          High:
-                          <span>{item.tempMax}°C</span>
-                        </label>
-                        <label className="home__forecast--upcoming-label">
-                          Low:
-                          <span>{item.tempMin}°C</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div
-                      className={`home__forecast--upcoming-expansion ${
-                        expansion[i]
-                          ? "home__forecast--upcoming-expansion-expand"
-                          : "home__forecast--upcoming-expansion-compress"
-                      }`}
-                      onClick={() => {
-                        !buttonDisabled && expandForecast(i);
-                      }}
-                    >
-                      <div className="home__forecast--upcoming-conditions">
-                        <label className="home__forecast--upcoming-label">
-                          Feel:
-                          <span>{item.feel}°C</span>
-                        </label>
-                        <label className="home__forecast--upcoming-label">
-                          Humidity:
-                          <span>{item.humidity}°C</span>
-                        </label>
-                        <label className="home__forecast--upcoming-label home__forecast--upcoming-label-pop">
-                          PoP:
-                          <span>{Math.round(item.pop * 100)}%</span>
-                        </label>
-                        <label className="home__forecast--upcoming-label">
-                          Wind:
-                          <span>
-                            {item.windSpeed}
-                            {"m/s "}
-                            {formatWindDir(item.windDir)}
-                          </span>
-                        </label>
-                      </div>
-                      <img
-                        className={`home__forecast--upcoming-action  ${
-                          expansion[i]
-                            ? "home__forecast--upcoming-action-expand"
-                            : "home__forecast--upcoming-action-compress"
-                        }`}
-                        src={expansionIcon}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </>
+        <Forecast
+          weatherData={weatherData}
+          expansion={expansion}
+          setExpansion={setExpansion}
+        />
       )}
       {!cityId && modalActive && !locationPermission && (
         <Modal
