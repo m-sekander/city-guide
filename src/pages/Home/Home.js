@@ -162,17 +162,22 @@ function Home() {
 
         weatherArrItem.dt = apiData.data.list[i].dt;
 
-        weatherArrItem.tempMin = tempMin;
-        weatherArrItem.tempMax = tempMax;
-        weatherArrItem.temp = apiData.data.list[i].main.temp;
+        weatherArrItem.tempMin = Math.round(tempMin * 10) / 10;
+        weatherArrItem.tempMax = Math.round(tempMax * 10) / 10;
+        weatherArrItem.temp =
+          Math.round(apiData.data.list[i].main.temp * 10) / 10;
 
         weatherArrItem.icon = apiData.data.list[i].weather[0].icon;
         weatherArrItem.desc = apiData.data.list[i].weather[0].main;
 
-        weatherArrItem.feel = apiData.data.list[i].main.feels_like;
-        weatherArrItem.humidity = apiData.data.list[i].main.humidity;
-        weatherArrItem.pop = apiData.data.list[i].pop;
-        weatherArrItem.windSpeed = apiData.data.list[i].wind.speed;
+        weatherArrItem.feel =
+          Math.round(apiData.data.list[i].main.feels_like * 10) / 10;
+        weatherArrItem.humidity = Math.round(
+          apiData.data.list[i].main.humidity
+        );
+        weatherArrItem.pop = Math.round(apiData.data.list[i].pop * 100);
+        weatherArrItem.windSpeed =
+          Math.round(apiData.data.list[i].wind.speed * 10) / 10;
         weatherArrItem.windDir = apiData.data.list[i].wind.deg;
 
         weatherArr.push(weatherArrItem);

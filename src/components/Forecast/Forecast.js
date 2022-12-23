@@ -39,12 +39,24 @@ function Forecast({ weatherData, expansion, setExpansion }) {
 
     if (type === "time") {
       if (date.getHours() === 0) {
+        if (date.getMinutes() < 10) {
+          return `12:0${date.getMinutes()}am`;
+        }
         return `12:${date.getMinutes()}am`;
       } else if (date.getHours() === 12) {
+        if (date.getMinutes() < 10) {
+          return `12:0${date.getMinutes()}pm`;
+        }
         return `12:${date.getMinutes()}pm`;
       } else if (date.getHours() < 12) {
+        if (date.getMinutes() < 10) {
+          return `${date.getHours()}:0${date.getMinutes()}am`;
+        }
         return `${date.getHours()}:${date.getMinutes()}am`;
       } else {
+        if (date.getMinutes() < 10) {
+          return `${date.getHours() - 12}:0${date.getMinutes()}pm`;
+        }
         return `${date.getHours() - 12}:${date.getMinutes()}pm`;
       }
     } else if (type === "day") {
@@ -116,7 +128,7 @@ function Forecast({ weatherData, expansion, setExpansion }) {
             </label>
             <label className="forecast--label forecast--label-pop">
               PoP:
-              <span>{Math.round(weatherData.weatherArr[0].pop * 100)}%</span>
+              <span>{weatherData.weatherArr[0].pop}%</span>
             </label>
             <label className="forecast--label">
               Wind:
@@ -189,11 +201,11 @@ function Forecast({ weatherData, expansion, setExpansion }) {
                     </label>
                     <label className="forecast--upcoming-label">
                       Humidity:
-                      <span>{item.humidity}°C</span>
+                      <span>{item.humidity}%</span>
                     </label>
                     <label className="forecast--upcoming-label forecast--upcoming-label-pop">
                       PoP:
-                      <span>{Math.round(item.pop * 100)}%</span>
+                      <span>{item.pop}%</span>
                     </label>
                     <label className="forecast--upcoming-label">
                       Wind:
