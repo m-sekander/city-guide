@@ -6,6 +6,7 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import searchIcon from "../../assets/images/search.svg";
+import expansionIcon from "../../assets/images/chevron_right-24px.svg";
 import { useParams, useNavigate } from "react-router-dom";
 import { GoogleMap } from "@react-google-maps/api";
 import Modal from "../../components/Modal/Modal";
@@ -18,6 +19,7 @@ function Home() {
   const [cityId, setCityId] = useState(useParams().cityId);
   const [modalActive, setModalActive] = useState(true);
   const [weatherData, setWeatherData] = useState(null);
+  const [expansion, setExpansion] = useState([false, false, false, false]);
   const searchOptions = { types: ["locality"] };
   const navigate = useNavigate();
   const locationPermission = sessionStorage.getItem("locationPermission");
@@ -156,6 +158,8 @@ function Home() {
       if ((7 + (i + 1)) % 8 === 0) {
         const weatherArrItem = {};
 
+        weatherArrItem.dt = apiData.data.list[i].dt;
+
         weatherArrItem.tempMin = tempMin;
         weatherArrItem.tempMax = tempMax;
         weatherArrItem.temp = apiData.data.list[i].main.temp;
@@ -199,8 +203,17 @@ function Home() {
     }
   }
 
-  function formatEpoch(timestamp, type) {
+  function formatEpoch(timestamp, type, index) {
     const date = new Date(timestamp * 1000);
+    const dayConversions = {
+      0: "Sunday",
+      1: "Monday",
+      2: "Tuesday",
+      3: "Wednesday",
+      4: "Thursday",
+      5: "Friday",
+      6: "Saturday",
+    };
 
     if (type === "time") {
       if (date.getHours() === 0) {
@@ -212,7 +225,20 @@ function Home() {
       } else {
         return `${date.getHours() - 12}:${date.getMinutes()}pm`;
       }
+    } else if (type === "day") {
+      if (index === 0) {
+        return "Tomorrow";
+      } else {
+        return dayConversions[date.getDay()];
+      }
     }
+  }
+
+  function expandForecast(index) {
+    const updatedExpansion = [...expansion];
+    updatedExpansion[index] = !updatedExpansion[index];
+    console.log(updatedExpansion);
+    return setExpansion(updatedExpansion);
   }
 
   if (cityId && !formattedCity) {
@@ -223,7 +249,6 @@ function Home() {
     locationPermitted();
   }
 
-  console.log(weatherData);
   return (
     <>
       <form className="home__form" onSubmit={handleSearch}>
@@ -329,7 +354,7 @@ function Home() {
               </label>
               <label className="home__forecast--label home__forecast--label-pop">
                 PoP:
-                <span>{weatherData.weatherArr[0].pop * 100}%</span>
+                <span>{Math.round(weatherData.weatherArr[0].pop * 100)}%</span>
               </label>
               <label className="home__forecast--label">
                 Wind:
@@ -348,6 +373,88 @@ function Home() {
                 <span>{formatEpoch(weatherData.sunset, "time")}</span>
               </label>
             </div>
+          </div>
+          <div className="home__forecast--upcoming-container">
+            {weatherData.weatherArr.slice(1).map((item, i) => {
+              return (
+                <div
+                  key={i}
+                  className={`home__forecast--upcoming  ${
+                    expansion[i]
+                      ? "home__forecast--upcoming-expand"
+                      : "home__forecast--upcoming-compress"
+                  }`}
+                >
+                  <div className="home__forecast--upcoming-main">
+                    <h3 className="home__forecast--upcoming-day">
+                      {formatEpoch(item.dt, "day", i)}
+                    </h3>
+                    <div className="home__forecast--upcoming-weather">
+                      <img
+                        className="home__forecast--upcoming-icon"
+                        src={`http://openweathermap.org/img/w/${item.icon}.png`}
+                        alt=""
+                      />
+                      <span className="home__forecast--upcoming-description">
+                        {item.desc}
+                      </span>
+                    </div>
+                    <div className="home__forecast--upcoming-hi-lo">
+                      <label className="home__forecast--upcoming-label">
+                        High:
+                        <span>{item.tempMax}°C</span>
+                      </label>
+                      <label className="home__forecast--upcoming-label">
+                        Low:
+                        <span>{item.tempMin}°C</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    className={`home__forecast--upcoming-expansion ${
+                      expansion[i]
+                        ? "home__forecast--upcoming-expansion-expand"
+                        : "home__forecast--upcoming-expansion-compress"
+                    }`}
+                    onClick={() => {
+                      expandForecast(i);
+                    }}
+                  >
+                    <div className="home__forecast--upcoming-conditions">
+                      <label className="home__forecast--upcoming-label">
+                        Feel:
+                        <span>{item.feel}°C</span>
+                      </label>
+                      <label className="home__forecast--upcoming-label">
+                        Humidity:
+                        <span>{item.humidity}°C</span>
+                      </label>
+                      <label className="home__forecast--upcoming-label home__forecast--upcoming-label-pop">
+                        PoP:
+                        <span>{Math.round(item.pop * 100)}%</span>
+                      </label>
+                      <label className="home__forecast--upcoming-label">
+                        Wind:
+                        <span>
+                          {item.windSpeed}
+                          {"m/s "}
+                          {formatWindDir(item.windDir)}
+                        </span>
+                      </label>
+                    </div>
+                    <img
+                      className={`home__forecast--upcoming-action  ${
+                        expansion[i]
+                          ? "home__forecast--upcoming-action-expand"
+                          : "home__forecast--upcoming-action-compress"
+                      }`}
+                      src={expansionIcon}
+                      alt=""
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

@@ -34,7 +34,10 @@
 
   .active {
     background-color: $dark-red;
-    color: $primary-white;
     border-radius: 100px;
+
+    span {
+      color: $primary-white;
+    }
   }
 }
