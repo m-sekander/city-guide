@@ -217,7 +217,7 @@
   }
 
   &__map {
-    width: 50vw;
+    width: 75vw;
     height: 50vh;
     min-width: 17.5rem;
     max-width: 80rem;
@@ -241,7 +241,12 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 0.75rem;
-    width: 100%;
+    @include desktop {
+      width: 75%;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+    }
 
     &--title {
       margin: 0.3125rem 0;
@@ -289,6 +294,7 @@
         flex-direction: column;
         justify-content: space-between;
         width: 60%;
+        max-width: 15rem;
         padding: 0 1rem;
       }
 
@@ -309,13 +315,23 @@
       }
 
       &-weather {
-        width: 40%;
+        width: 100%;
+        max-width: 7.5rem;
+        aspect-ratio: 1/1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border: 1px solid $primary-grey;
         border-radius: 50%;
+        padding: 1rem;
+
+        &-container {
+          width: 40%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
 
       &-icon {
@@ -334,9 +350,19 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        @include tablet {
+          justify-content: center;
+        }
 
         label {
           width: 50%;
+          @include tablet {
+            width: 45%;
+          }
+          @include desktop {
+            width: 50%;
+            max-width: 15rem;
+          }
         }
       }
     }
@@ -353,6 +379,16 @@
         animation: margin-compression 1.25s both;
       }
 
+      &-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        margin-top: 0.75rem;
+        @include desktop {
+          margin-top: 0;
+        }
+      }
+
       &-main {
         background-color: $primary-white;
         display: flex;
@@ -361,13 +397,6 @@
         position: relative;
         padding: 0.5rem;
         z-index: 1;
-      }
-
-      &-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-        margin-top: 0.75rem;
       }
 
       &-day {
@@ -427,6 +456,7 @@
       }
 
       &-expansion {
+        width: 100%;
         background-color: $light-grey;
         border-radius: 8px;
         padding: 0.5rem 0 0;

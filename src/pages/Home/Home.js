@@ -20,6 +20,7 @@ function Home() {
   const [modalActive, setModalActive] = useState(true);
   const [weatherData, setWeatherData] = useState(null);
   const [expansion, setExpansion] = useState([false, false, false, false]);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const searchOptions = { types: ["locality"] };
   const navigate = useNavigate();
   const locationPermission = sessionStorage.getItem("locationPermission");
@@ -29,6 +30,7 @@ function Home() {
       setFormattedCity("");
       setCoordinates(null);
       setWeatherData(null);
+      setExpansion([false, false, false, false]);
       setCityId(window.location.pathname.slice(6));
     }
   };
@@ -97,6 +99,7 @@ function Home() {
     geocodeByAddress(event.target.city.value)
       .then((result) => {
         // console.log("geocodeByAddress:", result[0]);
+        setExpansion([false, false, false, false]);
         setCityId(result[0].place_id);
         navigate(`/home/${result[0].place_id}`);
       })
@@ -235,9 +238,15 @@ function Home() {
   }
 
   function expandForecast(index) {
+    setButtonDisabled(true);
+
+    setTimeout(() => {
+      setButtonDisabled(false);
+    }, 1500);
+
     const updatedExpansion = [...expansion];
     updatedExpansion[index] = !updatedExpansion[index];
-    console.log(updatedExpansion);
+
     return setExpansion(updatedExpansion);
   }
 
@@ -311,152 +320,158 @@ function Home() {
         </div>
       )}
       {weatherData && (
-        <div className="home__forecast">
+        <>
           <h2 className="home__forecast--title">Forecast</h2>
-          <div className="home__forecast--current">
-            <h3 className="home__forecast--current-day">Today</h3>
-            <div className="home__forecast--current-temps">
-              <label className="home__forecast--label home__forecast--current-temp">
-                Current:
-                <span className="home__forecast--current-temp">
-                  {weatherData.weatherArr[0].temp}°C
-                </span>
-              </label>
-              <div className="home__forecast--current-hi-lo">
+          <div className="home__forecast">
+            <div className="home__forecast--current">
+              <h3 className="home__forecast--current-day">Today</h3>
+              <div className="home__forecast--current-temps">
+                <label className="home__forecast--label home__forecast--current-temp">
+                  Current:
+                  <span className="home__forecast--current-temp">
+                    {weatherData.weatherArr[0].temp}°C
+                  </span>
+                </label>
+                <div className="home__forecast--current-hi-lo">
+                  <label className="home__forecast--label">
+                    High:
+                    <span>{weatherData.weatherArr[0].tempMax}°C</span>
+                  </label>
+                  <label className="home__forecast--label">
+                    Low:
+                    <span>{weatherData.weatherArr[0].tempMin}°C</span>
+                  </label>
+                </div>
+              </div>
+              <div className="home__forecast--current-weather-container">
+                <div className="home__forecast--current-weather">
+                  <img
+                    className="home__forecast--current-icon"
+                    src={`http://openweathermap.org/img/w/${weatherData.weatherArr[0].icon}.png`}
+                    alt=""
+                  />
+                  <span className="home__forecast--current-description">
+                    {weatherData.weatherArr[0].desc}
+                  </span>
+                </div>
+              </div>
+              <div className="home__forecast--current-conditions">
                 <label className="home__forecast--label">
-                  High:
-                  <span>{weatherData.weatherArr[0].tempMax}°C</span>
+                  Feel:
+                  <span>{weatherData.weatherArr[0].feel}°C</span>
                 </label>
                 <label className="home__forecast--label">
-                  Low:
-                  <span>{weatherData.weatherArr[0].tempMin}°C</span>
+                  Humidity:
+                  <span>{weatherData.weatherArr[0].humidity}%</span>
+                </label>
+                <label className="home__forecast--label home__forecast--label-pop">
+                  PoP:
+                  <span>
+                    {Math.round(weatherData.weatherArr[0].pop * 100)}%
+                  </span>
+                </label>
+                <label className="home__forecast--label">
+                  Wind:
+                  <span>
+                    {weatherData.weatherArr[0].windSpeed}
+                    {"m/s "}
+                    {formatWindDir(weatherData.weatherArr[0].windDir)}
+                  </span>
+                </label>
+                <label className="home__forecast--label">
+                  Sunrise:
+                  <span>{formatEpoch(weatherData.sunrise, "time")}</span>
+                </label>
+                <label className="home__forecast--label">
+                  Sunset:
+                  <span>{formatEpoch(weatherData.sunset, "time")}</span>
                 </label>
               </div>
             </div>
-            <div className="home__forecast--current-weather">
-              <img
-                className="home__forecast--current-icon"
-                src={`http://openweathermap.org/img/w/${weatherData.weatherArr[0].icon}.png`}
-                alt=""
-              />
-              <span className="home__forecast--current-description">
-                {weatherData.weatherArr[0].desc}
-              </span>
-            </div>
-            <div className="home__forecast--current-conditions">
-              <label className="home__forecast--label">
-                Feel:
-                <span>{weatherData.weatherArr[0].feel}°C</span>
-              </label>
-              <label className="home__forecast--label">
-                Humidity:
-                <span>{weatherData.weatherArr[0].humidity}%</span>
-              </label>
-              <label className="home__forecast--label home__forecast--label-pop">
-                PoP:
-                <span>{Math.round(weatherData.weatherArr[0].pop * 100)}%</span>
-              </label>
-              <label className="home__forecast--label">
-                Wind:
-                <span>
-                  {weatherData.weatherArr[0].windSpeed}
-                  {"m/s "}
-                  {formatWindDir(weatherData.weatherArr[0].windDir)}
-                </span>
-              </label>
-              <label className="home__forecast--label">
-                Sunrise:
-                <span>{formatEpoch(weatherData.sunrise, "time")}</span>
-              </label>
-              <label className="home__forecast--label">
-                Sunset:
-                <span>{formatEpoch(weatherData.sunset, "time")}</span>
-              </label>
-            </div>
-          </div>
-          <div className="home__forecast--upcoming-container">
-            {weatherData.weatherArr.slice(1).map((item, i) => {
-              return (
-                <div
-                  key={i}
-                  className={`home__forecast--upcoming  ${
-                    expansion[i]
-                      ? "home__forecast--upcoming-expand"
-                      : "home__forecast--upcoming-compress"
-                  }`}
-                >
-                  <div className="home__forecast--upcoming-main">
-                    <h3 className="home__forecast--upcoming-day">
-                      {formatEpoch(item.dt, "day", i)}
-                    </h3>
-                    <div className="home__forecast--upcoming-weather">
+            <div className="home__forecast--upcoming-container">
+              {weatherData.weatherArr.slice(1).map((item, i) => {
+                return (
+                  <div
+                    key={i}
+                    className={`home__forecast--upcoming  ${
+                      expansion[i]
+                        ? "home__forecast--upcoming-expand"
+                        : "home__forecast--upcoming-compress"
+                    }`}
+                  >
+                    <div className="home__forecast--upcoming-main">
+                      <h3 className="home__forecast--upcoming-day">
+                        {formatEpoch(item.dt, "day", i)}
+                      </h3>
+                      <div className="home__forecast--upcoming-weather">
+                        <img
+                          className="home__forecast--upcoming-icon"
+                          src={`http://openweathermap.org/img/w/${item.icon}.png`}
+                          alt=""
+                        />
+                        <span className="home__forecast--upcoming-description">
+                          {item.desc}
+                        </span>
+                      </div>
+                      <div className="home__forecast--upcoming-hi-lo">
+                        <label className="home__forecast--upcoming-label">
+                          High:
+                          <span>{item.tempMax}°C</span>
+                        </label>
+                        <label className="home__forecast--upcoming-label">
+                          Low:
+                          <span>{item.tempMin}°C</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div
+                      className={`home__forecast--upcoming-expansion ${
+                        expansion[i]
+                          ? "home__forecast--upcoming-expansion-expand"
+                          : "home__forecast--upcoming-expansion-compress"
+                      }`}
+                      onClick={() => {
+                        !buttonDisabled && expandForecast(i);
+                      }}
+                    >
+                      <div className="home__forecast--upcoming-conditions">
+                        <label className="home__forecast--upcoming-label">
+                          Feel:
+                          <span>{item.feel}°C</span>
+                        </label>
+                        <label className="home__forecast--upcoming-label">
+                          Humidity:
+                          <span>{item.humidity}°C</span>
+                        </label>
+                        <label className="home__forecast--upcoming-label home__forecast--upcoming-label-pop">
+                          PoP:
+                          <span>{Math.round(item.pop * 100)}%</span>
+                        </label>
+                        <label className="home__forecast--upcoming-label">
+                          Wind:
+                          <span>
+                            {item.windSpeed}
+                            {"m/s "}
+                            {formatWindDir(item.windDir)}
+                          </span>
+                        </label>
+                      </div>
                       <img
-                        className="home__forecast--upcoming-icon"
-                        src={`http://openweathermap.org/img/w/${item.icon}.png`}
+                        className={`home__forecast--upcoming-action  ${
+                          expansion[i]
+                            ? "home__forecast--upcoming-action-expand"
+                            : "home__forecast--upcoming-action-compress"
+                        }`}
+                        src={expansionIcon}
                         alt=""
                       />
-                      <span className="home__forecast--upcoming-description">
-                        {item.desc}
-                      </span>
-                    </div>
-                    <div className="home__forecast--upcoming-hi-lo">
-                      <label className="home__forecast--upcoming-label">
-                        High:
-                        <span>{item.tempMax}°C</span>
-                      </label>
-                      <label className="home__forecast--upcoming-label">
-                        Low:
-                        <span>{item.tempMin}°C</span>
-                      </label>
                     </div>
                   </div>
-                  <div
-                    className={`home__forecast--upcoming-expansion ${
-                      expansion[i]
-                        ? "home__forecast--upcoming-expansion-expand"
-                        : "home__forecast--upcoming-expansion-compress"
-                    }`}
-                    onClick={() => {
-                      expandForecast(i);
-                    }}
-                  >
-                    <div className="home__forecast--upcoming-conditions">
-                      <label className="home__forecast--upcoming-label">
-                        Feel:
-                        <span>{item.feel}°C</span>
-                      </label>
-                      <label className="home__forecast--upcoming-label">
-                        Humidity:
-                        <span>{item.humidity}°C</span>
-                      </label>
-                      <label className="home__forecast--upcoming-label home__forecast--upcoming-label-pop">
-                        PoP:
-                        <span>{Math.round(item.pop * 100)}%</span>
-                      </label>
-                      <label className="home__forecast--upcoming-label">
-                        Wind:
-                        <span>
-                          {item.windSpeed}
-                          {"m/s "}
-                          {formatWindDir(item.windDir)}
-                        </span>
-                      </label>
-                    </div>
-                    <img
-                      className={`home__forecast--upcoming-action  ${
-                        expansion[i]
-                          ? "home__forecast--upcoming-action-expand"
-                          : "home__forecast--upcoming-action-compress"
-                      }`}
-                      src={expansionIcon}
-                      alt=""
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </>
       )}
       {!cityId && modalActive && !locationPermission && (
         <Modal
