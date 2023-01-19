@@ -23,6 +23,10 @@ function Home() {
   const searchOptions = { types: ["locality"] };
   const navigate = useNavigate();
   const locationPermission = sessionStorage.getItem("locationPermission");
+  const roadgoatKey =
+    `${process.env.REACT_APP_ROADGOAT_API_KEY}:${process.env.REACT_APP_ROADGOAT_SECRET_KEY}`.toString(
+      "base64"
+    );
 
   window.onpopstate = () => {
     if (window.location.pathname.includes("home")) {
@@ -67,6 +71,18 @@ function Home() {
             )
             .then((result) => {
               weatherDataExtract(result);
+              // return axios
+              //   .get(
+              //     `https://api.roadgoat.com/api/v2/destinations/auto_complete?q=${formattedCity}`,
+              //     {
+              //       headers: {
+              //         Authorization: `Basic ${roadgoatKey}`,
+              //       },
+              //     }
+              //   )
+              //   .then((result) => {
+              //     console.log(result);
+              //   });
             });
         })
         .catch((error) => {
@@ -198,6 +214,7 @@ function Home() {
     locationPermitted();
   }
 
+  console.log(coordinates);
   return (
     <>
       <form className="home__form" onSubmit={handleSearch}>
