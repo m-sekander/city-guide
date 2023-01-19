@@ -5,6 +5,7 @@ import expansionIcon from "../../assets/images/chevron_right-24px.svg";
 function Forecast({ weatherData, expansion, setExpansion }) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
+  // Converts wind direction from a degree to compass value
   function formatWindDir(dir) {
     if (dir > 22.5 && dir < 67.5) {
       return "NE";
@@ -25,6 +26,7 @@ function Forecast({ weatherData, expansion, setExpansion }) {
     }
   }
 
+  // Converts epoch times to required format
   function formatEpoch(timestamp, type, index) {
     const date = new Date(timestamp * 1000);
     const dayConversions = {

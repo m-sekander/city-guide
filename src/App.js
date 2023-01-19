@@ -9,7 +9,7 @@ import NotFound from "./pages/NotFound/NotFound";
 function App() {
   const [libraries] = useState(["places"]);
 
-  // initializing Google Maps Platform API
+  // Initializing Google Maps Platform API
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_KEY,
     libraries,
@@ -27,7 +27,7 @@ function App() {
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/home/:cityId" element={<Home />} />
-          <Route path="/compare" element={<h1>Compare</h1>} />
+          {/* <Route path="/compare" element={<h1>Compare</h1>} /> */}
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/404" />} />
         </Routes>

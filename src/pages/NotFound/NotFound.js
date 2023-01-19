@@ -6,6 +6,7 @@ import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 
 function NotFound() {
+  // When link isn't recognized, load the Not Found (this) page
   const navigate = useNavigate();
 
   return (

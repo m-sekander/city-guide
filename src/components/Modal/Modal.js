@@ -32,4 +32,5 @@ function Modal({ type, function1, function2 }) {
     );
   }
 }
+
 export default Modal;

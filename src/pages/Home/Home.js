@@ -24,6 +24,7 @@ function Home() {
   const navigate = useNavigate();
   const locationPermission = sessionStorage.getItem("locationPermission");
 
+  // When history location is changed, the states are reset thus re-renders the page components
   window.onpopstate = () => {
     if (window.location.pathname.includes("home")) {
       setFormattedCity("");
@@ -45,11 +46,11 @@ function Home() {
   };
 
   useEffect(() => {
-    // window.scroll({
-    //   top: 0,
-    //   right: 0,
-    //   behavior: "smooth",
-    // });
+    window.scroll({
+      top: 0,
+      right: 0,
+      behavior: "smooth",
+    });
 
     if (cityId) {
       geocodeByPlaceId(cityId)
@@ -109,6 +110,7 @@ function Home() {
     setCity("");
   }
 
+  // If location access is granted by user, load home page as user's city
   function locationPermitted() {
     axios
       .post(
@@ -140,6 +142,7 @@ function Home() {
     sessionStorage.setItem("locationPermission", "denied");
   }
 
+  // Cleans up the Weather API's data
   function weatherDataExtract(apiData) {
     const weatherObj = {};
 
