@@ -5,12 +5,13 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
+import { GoogleMap } from "@react-google-maps/api";
 import searchIcon from "../../assets/images/search.svg";
 import { useParams, useNavigate } from "react-router-dom";
-import { GoogleMap } from "@react-google-maps/api";
 import Modal from "../../components/Modal/Modal";
 import axios from "axios";
 import Forecast from "../../components/Forecast/Forecast";
+import Visits from "../../components/Visits/Visits";
 
 function Home() {
   const [city, setCity] = useState("");
@@ -20,6 +21,7 @@ function Home() {
   const [modalActive, setModalActive] = useState(true);
   const [weatherData, setWeatherData] = useState(null);
   const [expansion, setExpansion] = useState([false, false, false, false]);
+  const [visits, setVisits] = useState(null);
   const searchOptions = { types: ["locality"] };
   const navigate = useNavigate();
   const locationPermission = sessionStorage.getItem("locationPermission");
@@ -46,11 +48,11 @@ function Home() {
   };
 
   useEffect(() => {
-    window.scroll({
-      top: 0,
-      right: 0,
-      behavior: "smooth",
-    });
+    // window.scroll({
+    //   top: 0,
+    //   right: 0,
+    //   behavior: "smooth",
+    // });
 
     if (cityId) {
       geocodeByPlaceId(cityId)
@@ -61,13 +63,21 @@ function Home() {
         })
         .then((result) => {
           // console.log("getLatLng:", result);
+          const coord = { lat: result.lat, lng: result.lng };
           setCoordinates(result);
           return axios
             .get(
-              `https://api.openweathermap.org/data/2.5/forecast?lat=${result.lat}&lon=${result.lng}&appid=${process.env.REACT_APP_WEATHER_KEY}&units=metric`
+              `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lng}&appid=${process.env.REACT_APP_WEATHER_KEY}&units=metric`
             )
             .then((result) => {
               weatherDataExtract(result);
+              return axios
+                .get(
+                  `https://city-guide-api-bsga.onrender.com/?lat=${coord.lat}&lng=${coord.lng}&radius=10000&key=${process.env.REACT_APP_GOOGLE_KEY}`
+                )
+                .then((result) => {
+                  setVisits(result.data.response);
+                });
             });
         })
         .catch((error) => {
@@ -88,6 +98,9 @@ function Home() {
   }
 
   function handleSearch(event) {
+    setWeatherData(null);
+    setVisits(null);
+
     if (event.preventDefault) {
       event.preventDefault();
     }
@@ -201,6 +214,7 @@ function Home() {
     locationPermitted();
   }
 
+  console.log(visits);
   return (
     <>
       <form className="home__form" onSubmit={handleSearch}>
@@ -269,6 +283,7 @@ function Home() {
           setExpansion={setExpansion}
         />
       )}
+      {visits && <Visits visits={visits.slice(0, 12)} />}
       {!cityId && modalActive && !locationPermission && (
         <Modal
           type="location"

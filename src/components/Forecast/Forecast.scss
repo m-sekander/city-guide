@@ -63,12 +63,12 @@
     align-items: flex-start;
   }
 
-  &--title {
+  &__title {
     margin: 0.3125rem 0;
     font-size: 1.125rem;
   }
 
-  &--label {
+  &__label {
     display: flex;
     flex-direction: column;
     color: $primary-grey;
@@ -83,7 +83,7 @@
     }
   }
 
-  &--current {
+  &__current {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -182,7 +182,7 @@
     }
   }
 
-  &--upcoming {
+  &__upcoming {
     width: 47.5%;
     position: relative;
     margin-bottom: 2rem;

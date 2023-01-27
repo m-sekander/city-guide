@@ -85,54 +85,54 @@ function Forecast({ weatherData, expansion, setExpansion }) {
 
   return (
     <>
-      <h2 className="forecast--title">Forecast</h2>
+      <h2 className="forecast__title">Forecast</h2>
       <div className="forecast">
-        <div className="forecast--current">
-          <h3 className="forecast--current-day">Today</h3>
-          <div className="forecast--current-temps">
-            <label className="forecast--label forecast--current-temp">
+        <div className="forecast__current">
+          <h3 className="forecast__current-day">Today</h3>
+          <div className="forecast__current-temps">
+            <label className="forecast__label forecast__current-temp">
               Current:
-              <span className="forecast--current-temp">
+              <span className="forecast__current-temp">
                 {weatherData.weatherArr[0].temp}°C
               </span>
             </label>
-            <div className="forecast--current-hi-lo">
-              <label className="forecast--label">
+            <div className="forecast__current-hi-lo">
+              <label className="forecast__label">
                 High:
                 <span>{weatherData.weatherArr[0].tempMax}°C</span>
               </label>
-              <label className="forecast--label">
+              <label className="forecast__label">
                 Low:
                 <span>{weatherData.weatherArr[0].tempMin}°C</span>
               </label>
             </div>
           </div>
-          <div className="forecast--current-weather-container">
-            <div className="forecast--current-weather">
+          <div className="forecast__current-weather-container">
+            <div className="forecast__current-weather">
               <img
-                className="forecast--current-icon"
+                className="forecast__current-icon"
                 src={`http://openweathermap.org/img/w/${weatherData.weatherArr[0].icon}.png`}
                 alt=""
               />
-              <span className="forecast--current-description">
+              <span className="forecast__current-description">
                 {weatherData.weatherArr[0].desc}
               </span>
             </div>
           </div>
-          <div className="forecast--current-conditions">
-            <label className="forecast--label">
+          <div className="forecast__current-conditions">
+            <label className="forecast__label">
               Feel:
               <span>{weatherData.weatherArr[0].feel}°C</span>
             </label>
-            <label className="forecast--label">
+            <label className="forecast__label">
               Humidity:
               <span>{weatherData.weatherArr[0].humidity}%</span>
             </label>
-            <label className="forecast--label forecast--label-pop">
+            <label className="forecast__label forecast__label-pop">
               PoP:
               <span>{weatherData.weatherArr[0].pop}%</span>
             </label>
-            <label className="forecast--label">
+            <label className="forecast__label">
               Wind:
               <span>
                 {weatherData.weatherArr[0].windSpeed}
@@ -140,76 +140,76 @@ function Forecast({ weatherData, expansion, setExpansion }) {
                 {formatWindDir(weatherData.weatherArr[0].windDir)}
               </span>
             </label>
-            <label className="forecast--label">
+            <label className="forecast__label">
               Sunrise:
               <span>{formatEpoch(weatherData.sunrise, "time")}</span>
             </label>
-            <label className="forecast--label">
+            <label className="forecast__label">
               Sunset:
               <span>{formatEpoch(weatherData.sunset, "time")}</span>
             </label>
           </div>
         </div>
-        <div className="forecast--upcoming-container">
+        <div className="forecast__upcoming-container">
           {weatherData.weatherArr.slice(1).map((item, i) => {
             return (
               <div
                 key={i}
-                className={`forecast--upcoming  ${
+                className={`forecast__upcoming  ${
                   expansion[i]
-                    ? "forecast--upcoming-expand"
-                    : "forecast--upcoming-compress"
+                    ? "forecast__upcoming-expand"
+                    : "forecast__upcoming-compress"
                 }`}
               >
-                <div className="forecast--upcoming-main">
-                  <h3 className="forecast--upcoming-day">
+                <div className="forecast__upcoming-main">
+                  <h3 className="forecast__upcoming-day">
                     {formatEpoch(item.dt, "day", i)}
                   </h3>
-                  <div className="forecast--upcoming-weather">
+                  <div className="forecast__upcoming-weather">
                     <img
-                      className="forecast--upcoming-icon"
+                      className="forecast__upcoming-icon"
                       src={`http://openweathermap.org/img/w/${item.icon}.png`}
                       alt=""
                     />
-                    <span className="forecast--upcoming-description">
+                    <span className="forecast__upcoming-description">
                       {item.desc}
                     </span>
                   </div>
-                  <div className="forecast--upcoming-hi-lo">
-                    <label className="forecast--upcoming-label">
+                  <div className="forecast__upcoming-hi-lo">
+                    <label className="forecast__upcoming-label">
                       High:
                       <span>{item.tempMax}°C</span>
                     </label>
-                    <label className="forecast--upcoming-label">
+                    <label className="forecast__upcoming-label">
                       Low:
                       <span>{item.tempMin}°C</span>
                     </label>
                   </div>
                 </div>
                 <div
-                  className={`forecast--upcoming-expansion ${
+                  className={`forecast__upcoming-expansion ${
                     expansion[i]
-                      ? "forecast--upcoming-expansion-expand"
-                      : "forecast--upcoming-expansion-compress"
+                      ? "forecast__upcoming-expansion-expand"
+                      : "forecast__upcoming-expansion-compress"
                   }`}
                   onClick={() => {
                     !buttonDisabled && expandForecast(i);
                   }}
                 >
-                  <div className="forecast--upcoming-conditions">
-                    <label className="forecast--upcoming-label">
+                  <div className="forecast__upcoming-conditions">
+                    <label className="forecast__upcoming-label">
                       Feel:
                       <span>{item.feel}°C</span>
                     </label>
-                    <label className="forecast--upcoming-label">
+                    <label className="forecast__upcoming-label">
                       Humidity:
                       <span>{item.humidity}%</span>
                     </label>
-                    <label className="forecast--upcoming-label forecast--upcoming-label-pop">
+                    <label className="forecast__upcoming-label forecast__upcoming-label-pop">
                       PoP:
                       <span>{item.pop}%</span>
                     </label>
-                    <label className="forecast--upcoming-label">
+                    <label className="forecast__upcoming-label">
                       Wind:
                       <span>
                         {item.windSpeed}
@@ -219,10 +219,10 @@ function Forecast({ weatherData, expansion, setExpansion }) {
                     </label>
                   </div>
                   <img
-                    className={`forecast--upcoming-action  ${
+                    className={`forecast__upcoming-action  ${
                       expansion[i]
-                        ? "forecast--upcoming-action-expand"
-                        : "forecast--upcoming-action-compress"
+                        ? "forecast__upcoming-action-expand"
+                        : "forecast__upcoming-action-compress"
                     }`}
                     src={expansionIcon}
                     alt=""
