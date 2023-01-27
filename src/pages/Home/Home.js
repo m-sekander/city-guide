@@ -214,7 +214,6 @@ function Home() {
     locationPermitted();
   }
 
-  console.log(visits);
   return (
     <>
       <form className="home__form" onSubmit={handleSearch}>
