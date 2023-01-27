@@ -1,4 +1,4 @@
-![Logo](https://imgur.com/a/iHuc46n)
+![Logo](https://i.imgur.com/BleTixV.png)
 
 # CityGuide
 
