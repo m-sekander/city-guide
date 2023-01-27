@@ -4,10 +4,7 @@
 
 CityGuide is your one-stop shop to plan your next vacation. The app conveniently provides an autocomplete search bar, an interactive map, upcoming uweather data, and notable locations!
 
-## Links
-
-- [Live Site](https://moins-city-guide.netlify.app/home)
-- [Github Repo](https://github.com/m-sekander/city-guide)
+## [Live Site](https://moins-city-guide.netlify.app/home)
 
 ## Tech Stack
 
