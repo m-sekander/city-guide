@@ -48,11 +48,11 @@ function Home() {
   };
 
   useEffect(() => {
-    // window.scroll({
-    //   top: 0,
-    //   right: 0,
-    //   behavior: "smooth",
-    // });
+    window.scroll({
+      top: 0,
+      right: 0,
+      behavior: "smooth",
+    });
 
     if (cityId) {
       geocodeByPlaceId(cityId)
